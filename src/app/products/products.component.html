@@ -1,15 +1,31 @@
 <div class="container">
-    <div class="card">
+    <ng-template #errors>
+        <div class="text-danger">
+            {{errorMessage}}
+        </div>
+    </ng-template>
+    <div class="card" *ngIf="products; else errors">
         <div class="card-header">
             Products List
         </div>
         <div class="card-body">
+            <form [formGroup]="searchFormGroup" (ngSubmit)="handlSearchProducts()">
+                <div class="input-group">
+                    <label class="input-group-text">Keyword:</label>
+                    <input type="text" class="form-control" formControlName="keyword">
+                    <button class="btn btn-info">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                </div>
+            </form>
             <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Promotion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -17,6 +33,13 @@
                         <td>{{p.id}}</td>
                         <td>{{p.name}}</td>
                         <td>{{p.price}}</td>
+                        <td><i *ngIf="p.promotion==true" class="bi bi-heart-fill text-success"></i></td>
+                        <td><button (click)="handleChangePromotion(p)" [ngClass]="p.promotion==true?'btn-danger':'btn-success'" class="btn">
+                            <span *ngIf="p.promotion==true">Promo Off</span>
+                            <span *ngIf="p.promotion==false">Promo on</span>
+                            </button></td>
+                        <td><button  class="btn btn-danger" (click)="HandleDeleteProduct(p)"><i class="bi bi-trash"></i></button></td>
+                        
                     </tr>
                 </tbody>
 
