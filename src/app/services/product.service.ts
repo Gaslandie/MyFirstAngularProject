@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { Product } from '../model/product.model';
+import { Product, PageProduct } from '../model/product.model';
 import { UUID } from 'angular2-uuid';
 
 @Injectable({
@@ -24,6 +24,14 @@ private products!:Array<Product>;
     let rnd=Math.random();
     if(rnd<0.1) return throwError(()=>new Error('internet is not working'));
     else return of(this.products);
+  }
+
+  public getPageProducts(page : number,size : number):Observable<PageProduct>{
+    let index=page*size;
+    let totalPages = ~~(this.products.length / size);
+    if(this.products.length % size==0) totalPages++;
+    let pageProducts=this.products.slice(index,index+size);
+    return of({page:page,totalPages:totalPages,size:size,products:pageProducts})
   }
 
   public deleteProduct(id:string):Observable<boolean>{
